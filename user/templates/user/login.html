@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <h1>Local Library </h1>
+  <p>
+   <h3> New Library User Login</h3>
+  </p>
+  <div class="'container">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy  }}
+        <button type="'submit" class="btn btn-primary">Log in</button>
+    </form>
+  </div>
+
+{% endblock %}
