@@ -1,10 +1,13 @@
 from typing import Any
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 from .models import * 
-
+from django.contrib.auth.mixins import PermissionRequiredMixin
 import os 
+from django.views import View
 
+@login_required(login_url='login')
 def index(request):
     num_books = Book.objects.all().count() #Book is imported from models
     num_instances = BookInstance.objects.all().count()
@@ -24,7 +27,7 @@ def index(request):
     return render(request,'catalog/index.html',context=context)
 
 
-        
+@login_required(login_url='login')        
 def booklist(request):
     bookl = Book.objects.all()
     context = {
@@ -32,6 +35,7 @@ def booklist(request):
     }
     return render(request,'catalog/book_list.html',context)
 
+@login_required(login_url='login')
 def book_detail(request,pk):
     book = Book.objects.all().get(id=pk) #filter wont work here it returns a list
     #print(book)
@@ -40,6 +44,7 @@ def book_detail(request,pk):
     }
     return render(request,'catalog/book_detail.html',context)
 
+@login_required(login_url='login')
 def authorlist(request):
     os.system('clear')
     authorl = Author.objects.all()
@@ -49,6 +54,8 @@ def authorlist(request):
     }
     return render(request,'catalog/author_list.html',context)
 
+
+@login_required(login_url='login')
 def author_detail(request,pk):
     author = Author.objects.all().get(id=pk) #filter wont work here it returns a list
     #print(book)
@@ -56,3 +63,7 @@ def author_detail(request,pk):
         "author" : author,
     }
     return render(request,'catalog/author_detail.html',context)
+
+class TestingView(PermissionRequiredMixin,View):
+    permission_required = 'can_add_book'
+    print("worked")
